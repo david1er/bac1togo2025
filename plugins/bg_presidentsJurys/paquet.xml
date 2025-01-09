@@ -1,0 +1,16 @@
+<paquet
+	prefix="president"
+	categorie="divers"
+	version="1.0.0"
+	etat="dev"
+	compatibilite="[3.2.0;3.2.*]"
+	logo="prive/themes/spip/images/logo.png"
+    documentation="http://www.officedubacbenin.bj"
+>
+
+	<nom>Enregistrements des présidents de jurys</nom>
+	<auteur lien='www.officedubacbenin.bj'>Ghislain</auteur>
+	<licence>GNU/GPL</licence>
+	<pipeline nom="autoriser" inclure="president_autorisations.php" /> 
+	<menu nom="president" titre="Enregistrements des Présidents de Jurys" parent="menu_activite" icone="images/logo.png" position="0" />
+</paquet>

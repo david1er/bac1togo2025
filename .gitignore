@@ -1,0 +1,21 @@
+# ignore config connect
+*/ecrire/inc/utils.php
+# ignore config connect
+config/connect.php
+
+# ignore all tmp files
+tmp/
+
+
+# ignore all cache
+local/cache-css/*
+local/cache-js/*
+local/cache/*
+# ignore all logs
+
+*.log
+
+config/connect.php
+squelettes/sommaire.html
+squelettes/*
+IMG/distant/xml/principalxml2fdc.xml.md5.txt

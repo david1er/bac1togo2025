@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin>
+	<nom>CSS imbriqu&#233;s</nom>
+	<slogan>Traiter des CSS imbriqu&#233;s</slogan>
+	<auteur>ARNO*</auteur>
+	<version>3.4.0</version>
+	<etat>stable</etat>
+	<description>
+		Ce plugin permet de traiter des CSS imbriqu&#233;s.
+
+		Par ailleurs, il introduit des pseudo-styles permettant de coder 
+		rapidement des comportements qui demandent des notations
+		diff&#233;rentes pour viser diff&#233;rents navigateurs.
+
+		Il permet &#233;galement d'ins&#233;rer des @media queries {&#224; l'int&#233;rieur} des classes elles-m&#234;mes.
+	</description>
+	<lien>http://www.paris-beyrouth.org/Plugin-SPIP-CSS-imbriques</lien>
+	<prefix>css_imbriques</prefix>
+	<fonctions>css_imbriques_fonctions.php</fonctions>
+
+	<necessite id="SPIP" version="[1.9.0;3.2.99]" />
+	<categorie>outil</categorie>
+</plugin>

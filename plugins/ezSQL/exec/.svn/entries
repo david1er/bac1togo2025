@@ -1,0 +1,52 @@
+8
+
+dir
+20578
+svn://zone.spip.org/spip-zone/_plugins_/_stable_/ezSQL/exec
+svn://zone.spip.org/spip-zone
+
+
+
+2008-04-20T22:06:41.678855Z
+20093
+djakoni@gmail.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ac52e18a-acf5-0310-9fe8-c4428f23b10a
+
+ezsql.php
+file
+
+
+
+
+2008-05-19T14:00:11.000000Z
+821ecd7079f3acbfea12608be5e80e6b
+2008-04-20T22:06:41.678855Z
+20093
+djakoni@gmail.com
+
+inc-traitements.php
+file
+
+
+
+
+2008-05-19T14:00:11.000000Z
+a3024fe17754312e70760df67469cfb4
+2008-04-20T22:06:41.678855Z
+20093
+djakoni@gmail.com
+

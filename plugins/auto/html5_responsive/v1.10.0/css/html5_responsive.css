@@ -1,0 +1,24 @@
+html { 
+    -ms-content-zooming: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+label > * { 
+	pointer-events: none; /* pour fastclick sur IOS */
+}
+img { 
+	border: 0;
+	-ms-interpolation-mode: bicubic; 
+}
+body {
+	margin: 0;
+	padding: 0;
+	text-size-adjust:100%; 
+	-webkit-text-size-adjust:100%; 
+	-moz-text-size-adjust:100%; 
+	-ms-text-size-adjust:100%; 
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}

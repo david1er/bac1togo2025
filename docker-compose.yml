@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: spip-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Exploit@tion7
+      MYSQL_DATABASE: bac1togo2024,bepctogo2024
+      MYSQL_USER: adminmeps
+      MYSQL_PASSWORD: Exploit@tion7
+    volumes:
+      - db_data:/var/lib/mysql
+      - /home/mepsta/exams:/docker-entrypoint-initdb.d
+      - /home/mepsta/exams/bac1togo2024:/var/www/html/bac1togo2024
+      - /home/mepsta/exams/bepctogo2024:/var/www/html/bepctogo2024
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: spip-phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: Exploit@tion7
+
+volumes:
+  db_data:

@@ -1,0 +1,22 @@
+<paquet
+	prefix="nemequittepas"
+	categorie="edition"
+	version="1.1.4"
+	etat="test"
+	compatibilite="[3.0.0;4.2.*]"
+	logo="images/nemequitepas-48.png"
+	documentation="https://contrib.spip.net/4876"
+>
+
+	<nom>Ne me quitte pas !</nom>
+	<!-- Pour ne plus perdre votre contenu en cours d'édition ! -->
+
+	<auteur>Mehdi Cherigui</auteur>
+	<auteur>Jacques Pyrat</auteur>
+
+
+	<licence>GPL</licence>
+
+	<pipeline nom="header_prive" action="insert_head_prive" inclure="nemequittepas_pipelines.php" />
+
+</paquet>

@@ -1,0 +1,17 @@
+<paquet
+	prefix="anonymat"
+	categorie="divers"
+	version="1.0.0"
+	etat="dev"
+	compatibilite="[3.2.0;3.2.*]"
+	logo="prive/themes/spip/images/logo.png"
+    documentation="http://www.officedubacbenin.bj"
+>
+
+	<nom>Gestion de l'anonymat</nom>
+	<auteur lien='www.officedubacbenin.bj'>DGVLAV</auteur>
+	<licence>GNU/GPL</licence>
+	<pipeline nom="autoriser" inclure="anonymat_autorisations.php" /> 
+	<menu nom="anonymat" titre="Anonymat" parent="menu_edition" icone="images/logo.png" position="0" />
+
+</paquet>

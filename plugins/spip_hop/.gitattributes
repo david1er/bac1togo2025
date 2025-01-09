@@ -1,0 +1,21 @@
+* text=auto !eol
+formulaires/configurer_spip_hop.html -text
+lang/paquet-spip_hop.xml -text
+lang/paquet-spip_hop_en.php -text
+lang/paquet-spip_hop_fr.php -text
+lang/paquet-spip_hop_pt_br.php -text
+lang/spip_hop.xml -text
+lang/spip_hop_en.php -text
+lang/spip_hop_es.php -text
+lang/spip_hop_fr.php -text
+lang/spip_hop_pt_br.php -text
+/log.txt -text
+/paquet.xml -text
+prive/squelettes/contenu/configurer_spip_hop.html -text
+prive/style_prive_plugin_spip_hop.html -text
+prive/themes/spip/images/spip_hop-128.png -text svneol=unset#image/png
+prive/themes/spip/images/spip_hop-24.png -text svneol=unset#image/png
+prive/themes/spip/images/spip_hop-32.png -text svneol=unset#image/png
+prive/themes/spip/images/spip_hop-64.png -text svneol=unset#image/png
+/spip_hop_administrations.php -text
+/spip_hop_options.php -text

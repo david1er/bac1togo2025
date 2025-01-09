@@ -1,0 +1,65 @@
+<plugin>
+	<nom>
+		<multi>
+		[fr]Export CSV
+		[en]CSV Extraction
+		</multi>
+	</nom>
+	<slogan>
+		<multi>
+		[fr]Export CSV des articles et p&#233;titions
+		[en]CSV Extraction for articles and petitions
+		</multi>
+	</slogan>
+	
+	<auteur>[St&#233;phanie De Nada&#239;->http://www.webdesigneuse.net]</auteur>
+	<licence>(c) 2008 GNU/GPL</licence>
+	<version>0.3.1</version>
+	
+	<etat>test</etat>
+	
+	<description>
+		<multi>		
+		[fr]Ce plugin permet d'exporter au format csv :
+-* des articles / rubriques et leurs mots-cl&#233;s
+-* des p&#233;titions
+
+		[en]This plugin allows you to export csv
+-* articles / sections and keywords
+-* petitions
+		</multi>
+	</description>
+	
+	<lien>https://contrib.spip.net/Export-CSV-des-articles-et-petitions-pour-SPIP-1-9-2</lien>
+
+	<prefix>exportcsv</prefix>
+	
+	<icon>img_pack/exportcsv-72.png</icon> <!-- http://commons.wikimedia.org/wiki/Nuvola -->
+	
+	<pipeline>
+		<nom>ajouter_boutons</nom>
+		<action>ajouter_boutons</action>
+		<inclure>exportcsv_pipe.php</inclure>
+	</pipeline>
+
+	<pipeline>
+		<nom>header_prive</nom>
+		<inclure>exportcsv_pipe.php</inclure>
+	</pipeline>
+	
+	<pipeline>
+		<nom>insert_head</nom>
+		<action>insert_head</action>
+		<inclure>exportcsv_pipe.php</inclure>
+	</pipeline>
+	
+	<pipeline>
+	    <nom>affiche_gauche</nom>
+	    <action>affiche_gauche</action>
+	    <inclure>exportcsv_pipe.php</inclure>
+	</pipeline>
+	
+	 <categorie>edition</categorie>
+	 <necessite id="SPIP" version="[2.0.8;2.0.99]" />
+	 <necessite id="cfg" version="[1.3.4;]" />
+</plugin>
