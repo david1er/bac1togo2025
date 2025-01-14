@@ -74,6 +74,7 @@ function exec_sport()
             case 'Etablissement':
                 $isOperateur = false;
                 $isInspection = false;
+                $isEncadrant = false;
                 $isChefEtablissement = true;
                 $cd_eta = stripslashes($tab_auteur['email']);
                 $tab_cd_eta = explode('@', $cd_eta);
@@ -299,7 +300,7 @@ function exec_sport()
 
     echo debut_cadre_trait_couleur('', '', '', "Gestion du sport", "", "", false);
 
-    if (isAutorise(array('Admin', 'Dre', 'Notes', 'Eps', 'Encadrant', 'Inspection', 'Informaticien'))) {
+    if (isAutorise(array('Admin', 'Dre', 'Notes', 'Eps', 'Encadrant', 'Etablissement', 'Inspection', 'Informaticien'))) {
         if ($statut == 'Admin' || $statut == 'Encadrant') {
             if (isset($_POST['enreg_perf'])) {
                 for ($note = 1; $note <= 20; $note++) {
@@ -317,19 +318,21 @@ function exec_sport()
                 echo "<li><a href='./?exec=sport&etape=param' class='ajax'>Paramétrer</a></li>";
 
             }
-            if ($statut == 'Encadrant' || $statut == 'Inspection' || $statut == 'Admin') {
+            if ($statut == 'Encadrant' || $statut == 'Inspection' || $statut == 'Etablissement' || $statut == 'Admin') {
                 echo "<li><a href='./?exec=sport&etape=impres' class='ajax'>Impressions</a></li>";
             }
-            if ($isEncadrant) {
-                $sqlr = "SELECT * FROM bg_ref_region WHERE id=$id_region ORDER BY region ";
-            } elseif ($isInspection) {
-                $sqlr = "SELECT * FROM bg_ref_region WHERE id=$id_region ORDER BY region ";
-            } else { $sqlr = "SELECT * FROM bg_ref_region  ORDER BY region ";}
+            if ($statut == 'Encadrant' || $statut == 'Inspection' || $statut == 'Admin') {
+                if ($isEncadrant) {
+                    $sqlr = "SELECT * FROM bg_ref_region WHERE id=$id_region ORDER BY region ";
+                } elseif ($isInspection) {
+                    $sqlr = "SELECT * FROM bg_ref_region WHERE id=$id_region ORDER BY region ";
+                } else { $sqlr = "SELECT * FROM bg_ref_region  ORDER BY region ";}
 
-            $resultr = bg_query($lien, $sqlr, __FILE__, __LINE__);
-            while ($rowr = mysqli_fetch_array($resultr)) {
-                $id_region = $rowr['id'];
-                echo "<li><a href='./?exec=sport&etape=saispate&id_region=$id_region' class='ajax'>" . $rowr['region'] . "</a></li>";
+                $resultr = bg_query($lien, $sqlr, __FILE__, __LINE__);
+                while ($rowr = mysqli_fetch_array($resultr)) {
+                    $id_region = $rowr['id'];
+                    echo "<li><a href='./?exec=sport&etape=saispate&id_region=$id_region' class='ajax'>" . $rowr['region'] . "</a></li>";
+                }
             }
             echo "</ul>
 			</div>";
@@ -850,13 +853,25 @@ function exec_sport()
             $formImp = "<form method='POST' name='formImpres'>";
             $formImp .= debut_cadre_enfonce('', '', '', "Critères");
             $formImp .= " <table>";
-
-            $formImp .= "<tr><td><center><select style='width:65%' name='annee'>" . optionsAnnee(2020, $annee) . "</select></center></td>
+            if ($statut == 'Encadrant' || $statut == 'Inspection' || $statut == 'Admin') {
+                $formImp .= "<tr><td><center><select style='width:65%' name='annee'>" . optionsAnnee(2020, $annee) . "</select></center></td>
         <td><center><select style='width:65%' name='id_serie'>" . optionsReferentiel($lien, 'serie', $id_serie, 'WHERE id <4') . "</select></center></td>
         <td><center><select style='width:65%' name='id_atelier' id='id_atelier'>" . optionsReferentiel($lien, 'atelier', $id_atelier) . "</select></center></td></tr>";
-            $formImp .= "<tr><td><center><select style='width:65%' name='id_region' onchange='document.forms.formImpres.submit()'>" . optionsReferentiel($lien, 'region', $id_region, $WhereRegion) . "</select></center></td>
+
+                $formImp .= "<tr><td><center><select style='width:65%' name='id_region' onchange='document.forms.formImpres.submit()'>" . optionsReferentiel($lien, 'region', $id_region, $WhereRegion) . "</select></center></td>
         <td><center><select style='width:65%' name='id_centre' onchange='document.forms.formImpres.submit()'>" . optionsEtablissement($lien, $id_centre, $andWhereCen, true, ',bg_ref_inspection ins', '', 'Centre de composition') . "</select></center></td>
        	<td><center><select style='width:65%' name='id_etablissement' onchange='document.forms.formImpres.submit()'>" . optionsEtablissement($lien, $id_etablissement, $andWhereEta, true, ',bg_ref_inspection ins') . "</select></center></td></tr>";
+            }
+            if ($statut == 'Etablissement') {
+
+                $andWhereEta = "AND eta.id=$code_etablissement";
+                $formImp .= "<tr><td><center><select style='width:65%' name='annee'>" . optionsAnnee(2020, $annee) . "</select></center></td>
+                <td><center><select style='width:65%' name='id_serie'>" . optionsReferentiel($lien, 'serie', $id_serie, 'WHERE id <4') . "</select></center></td>
+                </tr>";
+
+                $formImp .= "<tr><td><center><select style='width:65%' name='id_etablissement' onchange='document.forms.formImpres.submit()'>" . optionsEtablissement($lien, $id_etablissement, $andWhereEta, true, ',bg_ref_inspection ins') . "</select></center></td>
+                <td><center><select style='width:65%' name='id_atelier' id='id_atelier'>" . optionsReferentiel($lien, 'atelier', $id_atelier) . "</select></center></td></tr>";
+            }
             $formImp .= "</table>";
             $formImp .= fin_cadre_enfonce();
             //Liste des actions
@@ -867,16 +882,18 @@ function exec_sport()
                         <td>Liste des candidats Aptes à l'Epreuve d'EPS</td>";
             $formImp .= "<td><input type='image' style='width:100px;' name='tache[candidats_atelier]' src='../plugins/images/sport2.jpg' onclick=\"if(id_atelier.value!=0) return true; else {alert('Choisissez un atelier'); return false; }\" /></td>
                         <td>Liste des candidats par Atelier</td></tr>";
-
-            $formImp .= "<tr><td><input type='image' style='width:100px;' name='tache[performances_atelier]' src='../plugins/images/sport30.png' onclick=\"if(id_atelier.value!=0 && (id_centre.value!=0 || id_etablissement.value!=0)) return true; else {alert('Choisissez un atelier'); return false; }\" /></td>
+            // $formImp .= "<td><input type='image' style='width:100px;' name='tache[candidats_atelier]' src='../plugins/images/sport2.jpg' onclick=\"if(id_etablissement.value!=0) return true; else {alert('Choisissez un atelier'); return false; }\" /></td>
+            //             <td>Liste des candidats par Atelier</td></tr>";
+            if ($statut == 'Encadrant' || $statut == 'Inspection' || $statut == 'Admin') {
+                $formImp .= "<tr><td><input type='image' style='width:100px;' name='tache[performances_atelier]' src='../plugins/images/sport30.png' onclick=\"if(id_atelier.value!=0 && (id_centre.value!=0 || id_etablissement.value!=0)) return true; else {alert('Choisissez un atelier'); return false; }\" /></td>
                         <td>Performances des candidats par Atelier</td>";
-            $formImp .= "<td><input type='image' style='width:100px;' name='tache[performances]' src='../plugins/images/sport4.jpg' onclick=\"if(id_centre.value!=0 || id_etablissement.value!=0) return true; else {alert('Choisissez un centre et/ou un etablissement'); return false; }\" /></td>
+                $formImp .= "<td><input type='image' style='width:100px;' name='tache[performances]' src='../plugins/images/sport4.jpg' onclick=\"if(id_centre.value!=0 || id_etablissement.value!=0) return true; else {alert('Choisissez un centre et/ou un etablissement'); return false; }\" /></td>
                         <td>Performances des candidats dans tous les Ateliers</td></tr>";
-            // $formImp .= "<td><input type='image' style='width:100px;' name='tache[candidats_centre_atelier]' src='../plugins/images/icone_centre_atelier.png' onclick=\"if(id_atelier.value!=0 && id_centre.value!=0) return true; else {alert('Choisissez un atelier et/ou un centre'); return false; }\" /></td>
-            //             <td>Liste des candidats par Centre par Atelier</td></tr>";
-            $formImp .= "<tr><td><input type='image' style='width:100px;' name='tache[notes]' src='../plugins/images/sport5.png' onclick=\"if(id_centre.value!=0 || id_etablissement.value!=0) return true; else {alert('Choisissez un centre et/ou un etablissement'); return false; }\" /></td><td>Notes des Candidats pour l'Epreuve d'EPS</td>
+                // $formImp .= "<td><input type='image' style='width:100px;' name='tache[candidats_centre_atelier]' src='../plugins/images/icone_centre_atelier.png' onclick=\"if(id_atelier.value!=0 && id_centre.value!=0) return true; else {alert('Choisissez un atelier et/ou un centre'); return false; }\" /></td>
+                //             <td>Liste des candidats par Centre par Atelier</td></tr>";
+                $formImp .= "<tr><td><input type='image' style='width:100px;' name='tache[notes]' src='../plugins/images/sport5.png' onclick=\"if(id_centre.value!=0 || id_etablissement.value!=0) return true; else {alert('Choisissez un centre et/ou un etablissement'); return false; }\" /></td><td>Notes des Candidats pour l'Epreuve d'EPS</td>
             </tr>";
-
+            }
             $formImp .= "</fieldset>";
 
             $formImp .= "</table></form>";

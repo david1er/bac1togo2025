@@ -30,6 +30,7 @@ function autoriser_sport_menu_dist($faire, $type, $id, $qui, $opts)
          || $email == 'encadrant'
         || $email == 'dre'
         || $email == 'inspection'
+        || $email == 'etablissement'
         || $email == 'eps'
         //|| $email == 'informaticien'
     ) {

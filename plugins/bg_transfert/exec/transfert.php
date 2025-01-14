@@ -69,7 +69,14 @@ function etablissementsCandidats($lien, $annee, $id_inspection, $id_etablissemen
     echo $formAnnee;
     echo $tableau;
 }
+function selectCentreByEtablissement($lien, $id)
+{
+    $sql = "SELECT id_centre FROM bg_ref_etablissement WHERE id='$id' ";
+    $result = bg_query($lien, $sql, __FILE__, __LINE__);
+    $row = mysqli_fetch_array($result);
+    return $row['id_centre'];
 
+}
 //Mise a jour du 21/11/2022
 //Liste des centres en fonction d'une Inspection
 function centreInspections($lien, $selected = '', $andWhere = '', $titre = true, $autreTable = '', $condJointure = '', $entete = '')
@@ -376,37 +383,37 @@ function exec_transfert()
                 $isEncadrant = true;
                 $isAdmin = false;
                 break;
-                case 'Dre':
-                    $cd_dre = stripslashes($tab_auteur['email']);
-                    $tab_cd_dre = explode('@', $cd_dre);
-                    $code_dre = $tab_cd_dre[1];
-                    $id_region = $code_dre;
-    
-                    $WhereRegion = " WHERE id=$id_region ";
-    
-                    $andWhereRegion = "WHERE id_region=$id_region";
-    
-                    //Recherche des etablissements de la region
-                    $sql = "SELECT eta.id FROM bg_ref_etablissement eta,bg_ref_inspection ins WHERE  ins.id=eta.id_inspection  AND ins.id_region=$id_region  ";
-                    $result = bg_query($lien, $sql, __FILE__, __LINE__);
-                    $tabEta = '(0';
-                    while ($row = mysqli_fetch_array($result)) {
-                        $id = $row['id'];
-                        $tabEta .= ',' . $id;
-                    }
-                    $tabEta .= ')';
-    
-                    $andStatut = " AND etablissement IN $tabEta ";
-                    $andStatut2 = " AND can.etablissement IN $tabEta ";
-                    $andEtablissementFormulaire = " AND eta.id IN $tabEta ";
-                    $andEtablissementFormulaire2 = " AND eta.id IN $tabEta ";
-                    $isChefEtablissement = false;
-                    $isOperateur = false;
-                    $isInspection = false;
-                    $isEncadrant = true;
-                    $isDre = true;
-                    $isAdmin = false;
-                    break;
+            case 'Dre':
+                $cd_dre = stripslashes($tab_auteur['email']);
+                $tab_cd_dre = explode('@', $cd_dre);
+                $code_dre = $tab_cd_dre[1];
+                $id_region = $code_dre;
+
+                $WhereRegion = " WHERE id=$id_region ";
+
+                $andWhereRegion = "WHERE id_region=$id_region";
+
+                //Recherche des etablissements de la region
+                $sql = "SELECT eta.id FROM bg_ref_etablissement eta,bg_ref_inspection ins WHERE  ins.id=eta.id_inspection  AND ins.id_region=$id_region  ";
+                $result = bg_query($lien, $sql, __FILE__, __LINE__);
+                $tabEta = '(0';
+                while ($row = mysqli_fetch_array($result)) {
+                    $id = $row['id'];
+                    $tabEta .= ',' . $id;
+                }
+                $tabEta .= ')';
+
+                $andStatut = " AND etablissement IN $tabEta ";
+                $andStatut2 = " AND can.etablissement IN $tabEta ";
+                $andEtablissementFormulaire = " AND eta.id IN $tabEta ";
+                $andEtablissementFormulaire2 = " AND eta.id IN $tabEta ";
+                $isChefEtablissement = false;
+                $isOperateur = false;
+                $isInspection = false;
+                $isEncadrant = true;
+                $isDre = true;
+                $isAdmin = false;
+                break;
             case 'Operateur':
                 $andStatut = " AND login='$login'";
                 $isOperateur = true;
@@ -735,22 +742,26 @@ function exec_transfert()
             if (isset($_POST['tri_centre_d']) && $_POST['tri_centre_d'] > 0) {
                 //  $andWhere .= " AND can.centre=$tri_centre_d ";
                 $andWhere .= " ";
-                $andWhereEta_d = "AND eta.id_centre=$tri_centre_d";}
+                $andWhereEta_d = "AND eta.id_centre=$tri_centre_d";
+            }
             if (isset($_POST['tri_inspection_d']) && $_POST['tri_inspection_d'] > 0) {
                 // $andWhere .= " AND eta.id_inspection=$tri_inspection_d ";
                 $andWhere .= "  ";
                 $andWhereEta_d .= " AND eta.id_inspection=$tri_inspection_d ";
-                $andWhereCen_d .= " AND eta.si_centre='oui' AND ins.id=eta.id_inspection AND eta.id_inspection=$tri_inspection_d ";}
+                $andWhereCen_d .= " AND eta.si_centre='oui' AND ins.id=eta.id_inspection AND eta.id_inspection=$tri_inspection_d ";
+            }
             if (isset($_POST['tri_region_d']) && $_POST['tri_region_d'] > 0) {
                 // $andWhere .= " AND ins.id_region=$tri_region_d ";
                 $andWhere .= " ";
                 $andWhereRegion_d .= "WHERE id_region=$tri_region_d";
                 $andWhereEta_d .= " AND ins.id_region=$tri_region_d AND ins.id=eta.id_inspection";
-                $andWhereCen_d .= "AND si_centre='oui' AND ins.id=eta.id_inspection AND ins.id_region=$tri_region_d";}
+                $andWhereCen_d .= "AND si_centre='oui' AND ins.id=eta.id_inspection AND ins.id_region=$tri_region_d";
+            }
             if (isset($_POST['tri_etablissement_d']) && $_POST['tri_etablissement_d'] > 0) {
                 //$andWhere .= " AND can.etablissement=$tri_etablissement_d ";
                 $andWhere .= "  ";
-                $andWhereEta_d .= " ";}
+                $andWhereEta_d .= " ";
+            }
 
             if ($isInspection) {
                 $andWhereRegion = " WHERE id_region='$id_region' AND id=$id_inspection";
@@ -883,17 +894,16 @@ function exec_transfert()
             $etab_expediteur = $_POST['tri_etablissement_e'];
             $etab_destinataire = $_POST['tri_etablissement_d'];
             $tabCandidat = $_POST['tabCandidat'];
-            // var_dump($tabCandidat);
-            // var_dump($etab_destinataire);
+            $centre = selectCentreByEtablissement($lien, $etab_destinataire);
 
             if (!empty($_POST['tabCandidat'])) {
 
                 foreach ($tabCandidat as $candidat) {
-                    $sql = "UPDATE bg_candidats SET etablissement=$etab_destinataire WHERE id_candidat=$candidat";
+                    $sql = "UPDATE bg_candidats SET etablissement=$etab_destinataire , centre =$centre WHERE id_candidat=$candidat";
                     bg_query($lien, $sql, __FILE__, __LINE__);
                 }
             } else {
-                echo ("nothing");
+                echo("nothing");
             }
 
         }
@@ -950,22 +960,26 @@ function exec_transfert()
             if (isset($_POST['tri_centre_dc']) && $_POST['tri_centre_dc'] > 0) {
 
                 $andWhere .= " ";
-                $andWhereEta_d = "AND eta.id_centre=$tri_centre_dc";}
+                $andWhereEta_d = "AND eta.id_centre=$tri_centre_dc";
+            }
             if (isset($_POST['tri_inspection_dc']) && $_POST['tri_inspection_dc'] > 0) {
 
                 $andWhere .= "  ";
                 $andWhereEta_d .= " AND eta.id_inspection=$tri_inspection_dc ";
-                $andWhereCen_d .= " AND eta.si_centre='oui' AND ins.id=eta.id_inspection AND eta.id_inspection=$tri_inspection_dc ";}
+                $andWhereCen_d .= " AND eta.si_centre='oui' AND ins.id=eta.id_inspection AND eta.id_inspection=$tri_inspection_dc ";
+            }
             if (isset($_POST['tri_region_dc']) && $_POST['tri_region_dc'] > 0) {
                 // $andWhere .= " AND ins.id_region=$tri_region_d ";
                 $andWhere .= " ";
                 $andWhereRegion_d .= "WHERE id_region=$tri_region_dc";
                 $andWhereEta_d .= " AND ins.id_region=$tri_region_dc AND ins.id=eta.id_inspection";
-                $andWhereCen_d .= "AND si_centre='oui' AND ins.id=eta.id_inspection AND ins.id_region=$tri_region_dc";}
+                $andWhereCen_d .= "AND si_centre='oui' AND ins.id=eta.id_inspection AND ins.id_region=$tri_region_dc";
+            }
             if (isset($_POST['tri_etablissement_dc']) && $_POST['tri_etablissement_dc'] > 0) {
                 //$andWhere .= " AND can.etablissement=$tri_etablissement_dc ";
                 $andWhere .= "  ";
-                $andWhereEta_d .= " ";}
+                $andWhereEta_d .= " ";
+            }
 
             if ($isInspection) {
                 $andWhereRegion = " WHERE id_region='$id_region' AND id=$id_inspection";

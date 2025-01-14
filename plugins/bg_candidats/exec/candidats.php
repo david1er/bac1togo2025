@@ -903,8 +903,10 @@ function exec_candidats()
             if (!$isChefEtablissement) {
                 echo "<li><a href='./?exec=candidats' class='ajax'>Inspections</a></li>";
             }
+            if ($statut == 'Admin'|| $statut == 'Informaticien') {
+                echo "<li><a href='./?exec=candidats&etape=import&id_inspection=$id_inspection' class='ajax'>Importation</a></li>";
 
-            echo "<li><a href='./?exec=candidats&etape=import&id_inspection=$id_inspection' class='ajax'>Importation</a></li>";
+            }
             echo "<li><a href='./?exec=candidats&etape=doc&id_inspection=$id_inspection' class='ajax'>Guide</a></li>";
             echo "<li><a href='./?exec=candidats&action=logout&logout=prive' class='ajax'>Se déconnecter</a></li>";
             echo "</ul>
@@ -2052,10 +2054,10 @@ function exec_candidats()
                             $pdn = 1;
                             $nationalite = 1;
                             $telephone = $data[19];
-                            $lv1 = 1;
-                            $lv2 = 2;
-                            $efa = 1;
-                            $efb = 1;
+                            $lv1 = 3;
+                            $lv2 = 0;
+                            $efa = 0;
+                            $efb = 0;
                             $eps = 1;
                             $etat_physique = 1;
                             $atelier1 = 0;
